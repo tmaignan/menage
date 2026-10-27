@@ -1,0 +1,537 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Ménage de la coloc</title>
+<meta name="description" content="Tâches ménagères partagées de la coloc">
+<meta name="theme-color" content="#5E9482">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Ménage">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600&family=Nunito+Sans:opsz,wght@6..12,400;6..12,600;6..12,700&display=swap">
+<style>
+:root{
+  --bg:#EEF2EF; --surface:#FFFFFF; --ink:#26332F; --muted:#6C7A75; --line:#DCE4E0;
+  --accent:#5E9482; --accent-soft:#DCEBE5; --late:#C9764F; --late-soft:#F6E2D7; --today:#B08A2E; --today-soft:#F4EBCF;
+  --m0:#8FB9A8; --m1:#E5A88B; --m2:#A9A3D6; --m3:#E2C27A; --m4:#8EB4D6; --m5:#D69BB5;
+  --display:"Fredoka","Nunito Sans",ui-rounded,system-ui,sans-serif;
+  --body:"Nunito Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --r:16px; color-scheme:light;
+}
+@media (prefers-color-scheme: dark){:root{
+  --bg:#18201E; --surface:#212B28; --ink:#E4ECE8; --muted:#97A6A0; --line:#33403C;
+  --accent:#7DB8A3; --accent-soft:#2A3D36; --late:#E39A76; --late-soft:#3E2C24; --today:#D9B65E; --today-soft:#3A3322;
+  --m0:#6E9F8C; --m1:#C98A6E; --m2:#8D87BE; --m3:#C4A55E; --m4:#6F98BC; --m5:#BA7E99; color-scheme:dark}}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);font-size:15px;line-height:1.45;-webkit-tap-highlight-color:transparent}
+[hidden]{display:none!important}
+.wrap{max-width:520px;margin:0 auto;padding-top:calc(20px + env(safe-area-inset-top,0px));padding-bottom:calc(90px + env(safe-area-inset-bottom,0px));padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:flex;flex-direction:column;gap:22px}
+h1{font-family:var(--display);font-weight:600;font-size:28px;margin:0;letter-spacing:-.01em}
+.sub{color:var(--muted);font-size:13px;margin:2px 0 0}
+.label{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+button,input,select{font:inherit;color:inherit}
+button{cursor:pointer;border:0;background:none;padding:0}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:8px}
+.small{font-size:12.5px;color:var(--muted)}
+.line{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.line input[type=text]{flex:1;min-width:0}
+input[type=text],select{background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:8px 10px;font-size:16px}
+.btn{background:var(--accent);color:var(--surface);font-weight:700;border-radius:10px;padding:8px 14px}
+.btn:disabled{opacity:.5}
+.ghost{color:var(--muted);font-size:13px;padding:6px 8px;border-radius:8px}
+.ghost.danger{color:var(--late)}
+hr{border:0;border-top:1px solid var(--line);margin:6px 0}
+.empty{background:var(--surface);border-radius:var(--r);padding:18px;color:var(--muted);text-align:center}
+.top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+.sync{font-size:12px;color:var(--muted);padding:6px 10px;border-radius:20px;background:var(--surface);white-space:nowrap}
+.sync.off{color:var(--late);background:var(--late-soft)}
+
+/* leader */
+.lead{background:var(--accent-soft);border-radius:var(--r);padding:16px;display:flex;align-items:center;gap:14px}
+.lead .av{width:46px;height:46px;font-size:20px}
+.lead .who-l{font-family:var(--display);font-weight:600;font-size:22px;line-height:1.1}
+.lead .prog{font-size:13px;color:var(--muted);margin-top:3px}
+.lead .next{margin-left:auto;text-align:right;font-size:12px;color:var(--muted)}
+
+/* bilan */
+.board{display:flex;flex-direction:column;gap:10px}
+.rank,.lrow{display:grid;grid-template-columns:28px 1fr auto;align-items:center;gap:10px}
+.lrow{font-size:13.5px}
+.av{width:28px;height:28px;border-radius:50%;display:grid;place-items:center;font-family:var(--display);font-weight:600;font-size:13px;color:#1E2A26;flex:none}
+.bar{height:8px;border-radius:8px;background:var(--line);overflow:hidden}
+.bar i{display:block;height:100%;border-radius:8px}
+.rank .nm{font-size:13px;margin-bottom:4px}
+.cnt{font-size:12px;color:var(--muted);font-weight:400}
+.pts{font-variant-numeric:tabular-nums;font-weight:700;font-size:14px;min-width:42px;text-align:right}
+.tabs{display:flex;background:var(--surface);border-radius:12px;padding:3px;gap:2px}
+.tab{padding:6px 11px;border-radius:9px;font-size:13px;font-weight:600;color:var(--muted)}
+.tab[aria-pressed="true"]{background:var(--accent-soft);color:var(--ink)}
+
+/* tâches */
+.tasks{display:flex;flex-direction:column;gap:8px}
+.task{background:var(--surface);border-radius:var(--r);padding:12px 14px;display:flex;flex-direction:column;gap:10px}
+.trow{display:flex;align-items:center;gap:12px}
+.check{width:36px;height:36px;flex:none;border-radius:50%;border:2px solid var(--line);display:grid;place-items:center;transition:border-color .15s,background .15s}
+.task.open .check{border-color:var(--accent);background:var(--accent-soft)}
+.check svg{opacity:0;transition:opacity .15s}
+.task.open .check svg{opacity:1}
+.task.done .check{border-color:var(--accent);background:var(--accent)}
+.task.done .check svg{opacity:1}
+.done .tname{color:var(--muted);text-decoration:line-through;text-decoration-color:var(--line)}
+.tinfo{flex:1;min-width:0}
+.tname{font-weight:600}
+.tmeta{font-size:12.5px;color:var(--muted)}
+.chip{font-size:11.5px;font-weight:700;padding:3px 9px;border-radius:20px;white-space:nowrap}
+.chip.late{background:var(--late-soft);color:var(--late)}
+.chip.today{background:var(--today-soft);color:var(--today)}
+.chip.ok{background:var(--accent-soft);color:var(--accent)}
+.who{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.who .q{font-size:13px;color:var(--muted);width:100%}
+.mbtn{display:flex;align-items:center;gap:6px;padding:5px 12px 5px 5px;border-radius:20px;background:var(--bg);font-weight:600;font-size:14px}
+.mbtn .av{width:26px;height:26px;font-size:11px}
+.mbtn.is-lead{background:var(--accent-soft);outline:1.5px solid var(--accent)}
+.tag{font-size:10.5px;font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:.06em}
+
+/* réglages */
+details{background:var(--surface);border-radius:var(--r);padding:4px 14px}
+summary{cursor:pointer;padding:12px 0;font-family:var(--display);font-weight:500;list-style:none;display:flex;justify-content:space-between}
+summary::-webkit-details-marker{display:none}
+summary::after{content:"+";color:var(--muted)}
+details[open] summary::after{content:"–"}
+.set{display:flex;flex-direction:column;gap:8px;padding-bottom:14px}
+.arrow{width:30px;height:30px;border-radius:8px;color:var(--muted)}
+.arrow:disabled{opacity:.3}
+
+/* écran code */
+.gate{min-height:70vh;display:flex;flex-direction:column;justify-content:center;gap:14px}
+.gate input{font-size:22px;letter-spacing:.2em;text-transform:uppercase;text-align:center}
+.err{color:var(--late);font-size:13.5px;min-height:1.4em}
+
+/* toast */
+.toast{position:fixed;left:50%;bottom:calc(18px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 12px 10px 16px;border-radius:14px;display:flex;gap:12px;align-items:center;font-size:14px;width:max-content;max-width:calc(100% - 32px);z-index:5}
+.toast button{color:var(--bg);font-weight:700;text-decoration:underline}
+@media (hover:hover){.check:hover{border-color:var(--accent);background:var(--accent-soft)}.check:hover svg{opacity:1}.mbtn:hover{background:var(--accent-soft)}.ghost:hover,.arrow:hover{background:var(--bg)}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+
+<!-- Écran de saisie du code -->
+<div class="wrap" id="gate" hidden>
+  <div class="gate">
+    <h1>Ménage</h1>
+    <p class="sub" style="font-size:15px">Entre le code de la coloc. Tu ne le saisiras qu'une fois sur ce téléphone.</p>
+    <form id="gateForm" class="set" style="padding:0">
+      <input type="text" id="gateCode" autocomplete="off" autocapitalize="characters" spellcheck="false" maxlength="20" aria-label="Code de la coloc">
+      <button class="btn" id="gateBtn" style="padding:12px">Entrer</button>
+      <p class="err" id="gateErr" role="alert"></p>
+    </form>
+  </div>
+</div>
+
+<!-- Appli -->
+<div class="wrap" id="app" hidden>
+  <header class="top">
+    <div><h1>Ménage</h1><p class="sub" id="today"></p></div>
+    <span class="sync" id="sync">…</span>
+  </header>
+
+  <section class="lead" id="lead" aria-live="polite"><p class="small">Chargement…</p></section>
+
+  <section style="display:flex;flex-direction:column;gap:10px">
+    <span class="label">Tâches</span>
+    <div class="tasks" id="tasks"></div>
+  </section>
+
+  <section style="display:flex;flex-direction:column;gap:10px">
+    <div class="line" style="justify-content:space-between">
+      <span class="label">Bilan</span>
+      <div class="tabs" role="group" aria-label="Période du bilan">
+        <button class="tab" data-act="range" data-r="week" id="tab-week">Semaine</button>
+        <button class="tab" data-act="range" data-r="month" id="tab-month">Mois</button>
+        <button class="tab" data-act="range" data-r="year" id="tab-year">Année</button>
+      </div>
+    </div>
+    <p class="small" id="range-label" style="margin:0"></p>
+    <div class="board" id="board"></div>
+    <div class="board" id="leaders" hidden></div>
+  </section>
+
+  <details id="settings">
+    <summary>Réglages</summary>
+    <div class="set" id="setbody"></div>
+  </details>
+</div>
+
+<div class="toast" id="toast" hidden></div>
+
+<script src="config.js"></script>
+<script>
+"use strict";
+const API = window.MENAGE_API || "";
+const PAL = 6, DAY = 864e5, POLL_MS = 30000;
+const PERIODS = { day: "chaque jour", week: "chaque semaine", month: "chaque mois" };
+const LS = { code: "menage-code", range: "menage-range", cache: "menage-cache" };
+
+const S = { members: [], tasks: [], log: [], anchor: null, loaded: false,
+            open: null, confirm: null, range: "week", pending: 0, online: true, lastSync: 0 };
+
+const $ = id => document.getElementById(id);
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const ls = {
+  get(k){ try { return localStorage.getItem(k); } catch { return null; } },
+  set(k,v){ try { localStorage.setItem(k, v); } catch {} },
+  del(k){ try { localStorage.removeItem(k); } catch {} },
+};
+
+/* ---------- dates ---------- */
+const weekStart = (t = Date.now()) => { const d = new Date(t); d.setHours(0,0,0,0); d.setDate(d.getDate() - (d.getDay()+6)%7); return d.getTime(); };
+const monthStart = () => { const d = new Date(); return new Date(d.getFullYear(), d.getMonth(), 1).getTime(); };
+const yearStart = () => new Date(new Date().getFullYear(), 0, 1).getTime();
+const dayStart = () => { const d = new Date(); d.setHours(0,0,0,0); return d.getTime(); };
+
+/* ---------- API ---------- */
+let code = (ls.get(LS.code) || "").toUpperCase();
+
+class ApiError extends Error { constructor(c){ super(c); this.code = c; } }
+
+async function apiGet(c = code){
+  const r = await fetch(`${API}?action=state&code=${encodeURIComponent(c)}&t=${Date.now()}`, { cache: "no-store" });
+  const j = await r.json();
+  if (!j.ok) throw new ApiError(j.error);
+  return j;
+}
+async function apiPost(action, payload = {}){
+  const r = await fetch(API, { method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" },
+                               body: JSON.stringify({ code, action, ...payload }) });
+  const j = await r.json();
+  if (!j.ok) throw new ApiError(j.error);
+  return j;
+}
+
+function applyState(st){
+  S.members = st.members || []; S.tasks = st.tasks || []; S.log = st.log || []; S.anchor = st.anchor ?? null;
+  S.loaded = true; S.lastSync = Date.now();
+  ls.set(LS.cache, JSON.stringify(st));
+  setOnline(true); render();
+}
+
+function setOnline(on){ S.online = on; renderSync(); }
+function renderSync(){
+  const el = $("sync");
+  if (!S.online){ el.className = "sync off"; el.textContent = "Hors ligne"; return; }
+  el.className = "sync";
+  el.textContent = S.pending ? "Enregistrement…" : S.lastSync ? "À jour" : "…";
+}
+
+async function refresh(){
+  if (S.pending || !code) return;
+  try { const j = await apiGet(); if (!S.pending) applyState(j.state); }
+  catch (e) { if (e.code === "code_invalide") return logout("Le code de la coloc a changé. Entre le nouveau code."); setOnline(false); }
+}
+
+/** Écrit sur le serveur. `optimistic` modifie l'affichage tout de suite. */
+async function write(action, payload, optimistic){
+  S.pending++; renderSync();
+  if (optimistic){ optimistic(); render(); }
+  try {
+    const j = await apiPost(action, payload);
+    S.pending--; applyState(j.state);
+    return j;
+  } catch (e) {
+    S.pending--; renderSync();
+    if (e.code === "code_invalide"){ logout("Le code de la coloc a changé. Entre le nouveau code."); return null; }
+    toast(e instanceof ApiError ? errorText(e.code) : "Pas de réseau : la modification n'a pas été enregistrée.");
+    if (!(e instanceof ApiError)) setOnline(false);
+    refresh();
+    return null;
+  }
+}
+function errorText(c){
+  return ({ occupe: "Quelqu'un d'autre enregistre en même temps. Réessaie.", introuvable: "Cet élément a été supprimé entre-temps.",
+            nom_vide: "Le nom est vide.", setup_manquant: "Le tableur n'est pas installé (lance setup dans Apps Script)." })[c]
+         || "L'enregistrement a échoué. Réessaie.";
+}
+
+/* ---------- logique ---------- */
+const memberById = id => S.members.find(m => m.id === id);
+const color = m => `var(--m${((m?.color ?? 0) % PAL + PAL) % PAL})`;
+const av = m => `<span class="av" style="background:${color(m)}">${esc((m?.name||"?").trim().charAt(0).toUpperCase())}</span>`;
+
+function leaderAt(offset = 0){
+  if (!S.members.length) return null;
+  const anchor = weekStart(S.anchor ?? Date.now());
+  const w = Math.round((weekStart() - anchor) / (7*DAY)) + offset;
+  const n = S.members.length;
+  return S.members[((w % n) + n) % n];
+}
+
+function status(t){
+  const p = t.period || "week";
+  const start = p === "day" ? dayStart() : p === "month" ? monthStart() : weekStart();
+  if (t.lastDoneAt && t.lastDoneAt >= start) return { done: true, rank: 9, label: "Fait", cls: "ok" };
+  let end;
+  if (p === "day") end = dayStart() + DAY;
+  else if (p === "month") { const d = new Date(); end = new Date(d.getFullYear(), d.getMonth()+1, 1).getTime(); }
+  else end = weekStart() + 7*DAY;
+  const left = Math.round((end - dayStart()) / DAY);
+  if (left <= 1) return { done: false, rank: 0, label: p === "day" ? "Aujourd'hui" : "Dernier jour", cls: "late" };
+  return { done: false, rank: left <= 2 ? 1 : 2, label: `Reste ${left} j`, cls: "today" };
+}
+
+/* ---------- rendu ---------- */
+function renderLead(){
+  const el = $("lead");
+  if (!S.loaded) return;
+  const L = leaderAt(0), N = leaderAt(1);
+  if (!L){ el.innerHTML = `<p class="small">Ajoute les colocataires dans Réglages pour lancer la rotation.</p>`; return; }
+  const weekly = S.tasks.filter(t => (t.period||"week") === "week");
+  const doneN = weekly.filter(t => status(t).done).length;
+  el.innerHTML = `${av(L)}
+    <div style="min-width:0"><div class="label">Leader de la semaine</div>
+      <div class="who-l">${esc(L.name)}</div>
+      <div class="prog">${weekly.length ? `${doneN} tâche${doneN>1?"s":""} sur ${weekly.length} faite${doneN>1?"s":""} cette semaine` : ""}</div></div>
+    ${N && N.id !== L.id ? `<div class="next">Semaine prochaine<br><strong style="color:var(--ink)">${esc(N.name)}</strong></div>` : ""}`;
+}
+
+function renderTasks(){
+  const el = $("tasks");
+  if (!S.loaded){ el.innerHTML = ""; return; }
+  if (!S.tasks.length){ el.innerHTML = `<div class="empty">Aucune tâche pour l'instant.<br>Ajoute la première dans Réglages.</div>`; return; }
+  const L = leaderAt(0);
+  const pickers = L ? [L, ...S.members.filter(m => m.id !== L.id)] : S.members;
+  const list = S.tasks.map(t => ({ t, s: status(t) })).sort((a,b) => a.s.rank - b.s.rank || (a.t.order||0) - (b.t.order||0));
+  el.innerHTML = list.map(({t,s}) => {
+    const meta = s.done
+      ? `fait par ${esc(memberById(t.lastDoneBy)?.name || "quelqu'un")} le ${new Date(t.lastDoneAt).toLocaleDateString("fr-FR",{weekday:"short",day:"numeric"})}`
+      : `${PERIODS[t.period||"week"]} · ${t.points||1} pt${(t.points||1)>1?"s":""}`;
+    const open = S.open === t.id;
+    return `<article class="task${open?" open":""}${s.done?" done":""}">
+      <div class="trow">
+        <button class="check" data-act="${s.done?"reopen":"open"}" data-id="${esc(t.id)}" aria-label="${s.done?"Remettre « "+esc(t.name)+" » à faire":"Marquer « "+esc(t.name)+" » comme faite"}" aria-expanded="${open}">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="${s.done?"var(--surface)":"var(--accent)"}" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 8.5l3 3 6-7"/></svg></button>
+        <div class="tinfo"><div class="tname">${esc(t.name)}</div><div class="tmeta">${meta}</div></div>
+        <span class="chip ${s.cls}">${s.label}</span>
+      </div>
+      ${open ? `<div class="who"><span class="q">Qui l'a faite ?</span>${
+        pickers.length ? pickers.map(m => `<button class="mbtn${L && m.id===L.id?" is-lead":""}" data-act="done" data-id="${esc(t.id)}" data-m="${esc(m.id)}">${av(m)}${esc(m.name)}${L && m.id===L.id?` <span class="tag">leader</span>`:""}</button>`).join("")
+        : `<span class="small">Ajoute d'abord un colocataire dans Réglages.</span>`}</div>` : ""}
+    </article>`;
+  }).join("");
+}
+
+function rangeStart(r){ return r === "year" ? yearStart() : r === "month" ? monthStart() : weekStart(); }
+function rangeText(r){
+  const d = new Date();
+  if (r === "year") return `Année ${d.getFullYear()}`;
+  if (r === "month") { const s = d.toLocaleDateString("fr-FR", { month: "long", year: "numeric" }); return s.charAt(0).toUpperCase() + s.slice(1); }
+  return `Semaine du ${new Date(weekStart()).toLocaleDateString("fr-FR", { day: "numeric", month: "long" })}`;
+}
+const isWeeklyLog = l => (l.period || S.tasks.find(t => t.id === l.taskId)?.period || "week") === "week";
+
+function renderBoard(){
+  const r = S.range;
+  ["week","month","year"].forEach(k => $("tab-"+k).setAttribute("aria-pressed", String(k === r)));
+  $("range-label").textContent = rangeText(r);
+  const el = $("board");
+  if (!S.loaded || !S.members.length){ el.innerHTML = ""; $("leaders").hidden = true; return; }
+  const from = rangeStart(r);
+  const pts = Object.fromEntries(S.members.map(m => [m.id, 0]));
+  const cnt = Object.fromEntries(S.members.map(m => [m.id, 0]));
+  S.log.forEach(l => { if (l.at >= from && l.memberId in pts) { pts[l.memberId] += (l.points||0); cnt[l.memberId]++; } });
+  const max = Math.max(1, ...Object.values(pts));
+  el.innerHTML = [...S.members].sort((a,b) => pts[b.id]-pts[a.id]).map(m => `
+    <div class="rank">${av(m)}
+      <div style="min-width:0"><div class="nm">${esc(m.name)} <span class="cnt">· ${cnt[m.id]} tâche${cnt[m.id]>1?"s":""}</span></div><div class="bar"><i style="width:${pts[m.id]/max*100}%;background:${color(m)}"></i></div></div>
+      <span class="pts">${pts[m.id]} pt${pts[m.id]>1?"s":""}</span>
+    </div>`).join("");
+  renderLeaders(r, from);
+}
+
+function renderLeaders(r, from){
+  const el = $("leaders");
+  if (r === "week") { el.hidden = true; return; }
+  const weeklyN = S.tasks.filter(t => (t.period||"week") === "week").length;
+  const first = Math.max(weekStart(S.anchor ?? Date.now()), weekStart(from));
+  const stats = {};
+  for (let ws = weekStart(); ws >= first; ws = weekStart(ws - 3*DAY)) {
+    const L = leaderAt(Math.round((ws - weekStart()) / (7*DAY))); if (!L) continue;
+    const we = weekStart(ws + 10*DAY);
+    const done = new Set(S.log.filter(l => l.at >= ws && l.at < we && isWeeklyLog(l)).map(l => l.taskId)).size;
+    const s = stats[L.id] ||= { weeks: 0, done: 0, expected: 0 };
+    s.weeks++; s.done += Math.min(done, weeklyN); s.expected += weeklyN;
+  }
+  const rows = S.members.filter(m => stats[m.id]);
+  const cur = leaderAt(0)?.id;
+  el.hidden = false;
+  el.innerHTML = `<span class="label" style="margin-top:8px">Semaines de leader</span>` + (rows.length ? rows.map(m => {
+    const s = stats[m.id], pct = s.expected ? Math.round(s.done / s.expected * 100) : 0;
+    return `<div class="lrow">${av(m)}<span>${esc(m.name)} <span class="cnt">· ${s.weeks} semaine${s.weeks>1?"s":""}${m.id === cur ? " dont celle en cours" : ""}</span></span>
+      <span class="pts">${pct} %</span></div>`;
+  }).join("") + `<p class="small" style="margin:0">Part des tâches hebdo faites pendant ses semaines de leader.</p>` : `<p class="small">Pas encore de semaine de leader.</p>`);
+}
+
+function renderSettings(){
+  const el = $("setbody");
+  const c = S.confirm, n = S.members.length;
+  el.innerHTML = `
+    <span class="label">Colocataires et ordre de rotation</span>
+    ${S.members.map((m,i) => `<div class="line">
+      <button class="arrow" data-act="move" data-id="${esc(m.id)}" data-dir="-1" aria-label="Monter ${esc(m.name)}" ${i===0?"disabled":""}>↑</button>
+      <button class="arrow" data-act="move" data-id="${esc(m.id)}" data-dir="1" aria-label="Descendre ${esc(m.name)}" ${i===n-1?"disabled":""}>↓</button>
+      ${av(m)}
+      <input type="text" id="mn-${esc(m.id)}" value="${esc(m.name)}" data-act="rename" data-id="${esc(m.id)}" aria-label="Nom" maxlength="24">
+      ${c === "m:"+m.id ? `<button class="ghost danger" data-act="delm" data-id="${esc(m.id)}">Confirmer</button>` : `<button class="ghost" data-act="ask" data-k="m:${esc(m.id)}">Retirer</button>`}
+    </div>`).join("")}
+    <p class="small" style="margin:0">Le leader change chaque lundi en suivant cet ordre.</p>
+    <form class="line" id="addm"><input type="text" id="newm" placeholder="Prénom" aria-label="Prénom du colocataire" maxlength="24"><button class="btn">Ajouter</button></form>
+    <hr>
+    <span class="label">Tâches</span>
+    ${S.tasks.map(t => `<div class="line"><span style="flex:1;min-width:0">${esc(t.name)} <span class="small">· ${PERIODS[t.period||"week"]} · ${t.points||1} pt</span></span>
+      ${c === "t:"+t.id ? `<button class="ghost danger" data-act="delt" data-id="${esc(t.id)}">Confirmer</button>` : `<button class="ghost" data-act="ask" data-k="t:${esc(t.id)}">Supprimer</button>`}
+    </div>`).join("")}
+    <form class="set" id="addt" style="padding:0">
+      <input type="text" id="newt" placeholder="Nouvelle tâche" aria-label="Nom de la tâche" maxlength="50">
+      <div class="line">
+        <select id="newe" aria-label="Fréquence"><option value="day">Chaque jour</option><option value="week" selected>Chaque semaine</option><option value="month">Chaque mois</option></select>
+        <select id="newp" aria-label="Points"><option value="1">1 pt</option><option value="2" selected>2 pts</option><option value="3">3 pts</option></select>
+        <button class="btn">Ajouter</button>
+      </div>
+    </form>
+    <hr>
+    <div class="line" style="justify-content:space-between">
+      <span class="small">Code de la coloc : <strong>${esc(code)}</strong></span>
+      ${c === "logout" ? `<button class="ghost danger" data-act="logout">Confirmer</button>` : `<button class="ghost" data-act="ask" data-k="logout">Changer de code</button>`}
+    </div>`;
+}
+
+function render(){
+  renderLead(); renderTasks(); renderBoard(); renderSync();
+  if (!$("settings").contains(document.activeElement)) renderSettings();
+}
+
+/* ---------- toast ---------- */
+let toastTimer;
+function toast(msg, undo){
+  const el = $("toast");
+  el.innerHTML = `<span>${esc(msg)}</span>${undo ? `<button id="undo">Annuler</button>` : ""}`;
+  el.hidden = false;
+  if (undo) $("undo").onclick = () => { el.hidden = true; undo(); };
+  clearTimeout(toastTimer); toastTimer = setTimeout(() => el.hidden = true, 6000);
+}
+
+/* ---------- actions ---------- */
+async function complete(taskId, memberId){
+  const t = S.tasks.find(x => x.id === taskId); if (!t) return;
+  S.open = null;
+  const j = await write("complete", { taskId, memberId }, () => {
+    t.lastDoneAt = Date.now(); t.lastDoneBy = memberId;
+    S.log.push({ id: "tmp", at: Date.now(), taskId, period: t.period, memberId, points: t.points||1 });
+  });
+  if (j) toast(`${t.name} : +${t.points||1} pour ${memberById(memberId)?.name||""}`,
+               () => write("undoComplete", { taskId, logId: j.logId, prev: j.prev }));
+}
+
+function reopen(taskId){
+  const t = S.tasks.find(x => x.id === taskId); if (!t) return;
+  write("reopen", { taskId }, () => {
+    S.log = S.log.filter(l => l.id !== t.lastLogId);
+    t.lastDoneAt = null; t.lastDoneBy = null;
+  }).then(j => { if (j) toast(`${t.name} est de nouveau à faire.`); });
+}
+
+document.addEventListener("click", e => {
+  const b = e.target.closest("[data-act]"); if (!b) return;
+  const { act, id } = b.dataset;
+  if (act === "range"){ S.range = b.dataset.r; ls.set(LS.range, S.range); renderBoard(); }
+  else if (act === "open"){ S.open = S.open === id ? null : id; renderTasks(); }
+  else if (act === "done") complete(id, b.dataset.m);
+  else if (act === "reopen") reopen(id);
+  else if (act === "move") write("moveMember", { id, dir: +b.dataset.dir });
+  else if (act === "ask"){ S.confirm = b.dataset.k; renderSettings(); }
+  else if (act === "delm"){ S.confirm = null; write("removeMember", { id }); }
+  else if (act === "delt"){ S.confirm = null; write("removeTask", { id }); }
+  else if (act === "logout") logout();
+});
+document.addEventListener("change", e => {
+  const b = e.target.closest("[data-act=rename]"); if (!b) return;
+  const name = b.value.trim(); if (!name) { renderSettings(); return; }
+  write("renameMember", { id: b.dataset.id, name });
+});
+document.addEventListener("submit", e => {
+  e.preventDefault();
+  if (e.target.id === "addm"){
+    const name = $("newm").value.trim(); if (!name) return;
+    $("newm").value = ""; write("addMember", { name });
+  }
+  if (e.target.id === "addt"){
+    const name = $("newt").value.trim(); if (!name) return;
+    $("newt").value = ""; write("addTask", { name, period: $("newe").value, points: +$("newp").value });
+  }
+});
+$("settings").addEventListener("focusout", () => setTimeout(() => { if (!$("settings").contains(document.activeElement)) renderSettings(); }, 0));
+
+/* ---------- code de la coloc ---------- */
+function showGate(msg = ""){
+  $("app").hidden = true; $("gate").hidden = false;
+  $("gateErr").textContent = msg; $("gateCode").value = "";
+}
+function logout(msg = ""){
+  code = ""; ls.del(LS.code); ls.del(LS.cache);
+  S.loaded = false; S.confirm = null; showGate(msg);
+}
+$("gateForm").addEventListener("submit", async e => {
+  e.preventDefault();
+  const c = $("gateCode").value.trim().toUpperCase(); if (!c) return;
+  $("gateBtn").disabled = true; $("gateErr").textContent = "";
+  try {
+    const j = await apiGet(c);
+    code = c; ls.set(LS.code, c);
+    startApp(); applyState(j.state);
+  } catch (err) {
+    $("gateErr").textContent = err.code === "code_invalide" ? "Ce code ne correspond pas." : "Connexion impossible. Vérifie le réseau.";
+  } finally { $("gateBtn").disabled = false; }
+});
+
+/* ---------- démarrage ---------- */
+let pollTimer;
+function startApp(){
+  $("gate").hidden = true; $("app").hidden = false;
+  $("today").textContent = new Date().toLocaleDateString("fr-FR", { weekday:"long", day:"numeric", month:"long" });
+  clearInterval(pollTimer);
+  pollTimer = setInterval(() => { if (document.visibilityState === "visible") refresh(); }, POLL_MS);
+}
+document.addEventListener("visibilitychange", () => {
+  if (document.visibilityState === "visible" && code){
+    $("today").textContent = new Date().toLocaleDateString("fr-FR", { weekday:"long", day:"numeric", month:"long" });
+    refresh();
+  }
+});
+window.addEventListener("online", refresh);
+
+(function boot(){
+  const r = ls.get(LS.range); if (["week","month","year"].includes(r)) S.range = r;
+  if (!API || API.includes("A_REMPLACER")){
+    showGate(); $("gateForm").hidden = true;
+    $("gate").querySelector(".sub").textContent = "L'adresse de l'API n'est pas configurée. Renseigne-la dans config.js.";
+    return;
+  }
+  if (!code) return showGate();
+  startApp();
+  try { const cached = JSON.parse(ls.get(LS.cache) || "null"); if (cached){ applyState(cached); S.lastSync = 0; } } catch {}
+  refresh();
+})();
+
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => navigator.serviceWorker.register("sw.js").catch(() => {}));
+}
+</script>
+</body>
+</html>
